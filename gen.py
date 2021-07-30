@@ -159,7 +159,7 @@ j2 = SubWorkflow("subwf2.yml", _id="subwf2")\
 # that in some way we need *both* this map file, and the one saying to stage
 # intermediate files back to the main workflow, and it seems that currently we
 # can only use one of the two.
-j1.add_args('-Dpegasus.dir.storage.mapper.replica.file=/home/ian.harry/lscsoft_git/src/pycbc/examples/search/pegasus_test/output_sw.map')
+j1.add_args('-Dpegasus.dir.storage.mapper.replica.file=output_sw1.map')
 
 root_wf.add_jobs(j1, j2)
 
