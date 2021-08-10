@@ -144,10 +144,14 @@ root_wf = Workflow("root")
 # by the sub workflow, or specify the location to it in the propoerties file
 root_wf.add_replica_catalog(rc)
 
-j1 = SubWorkflow("subwf1.yml", _id="subwf1")\
-        .add_planner_args(verbose=3)\
+j1 = SubWorkflow("subwf1.yml", _id="subwf1")
+j1.add_args('-Dpegasus.dir.storage.mapper.replica.file=output_sw1.map')
+
+
+j1.add_planner_args(verbose=3, output_sites=['local'])\
         .add_inputs(input_file, output_map_sw1)\
         .add_outputs(k1_out)
+
 
 j2 = SubWorkflow("subwf2.yml", _id="subwf2")\
         .add_planner_args(verbose=3)\
@@ -159,7 +163,6 @@ j2 = SubWorkflow("subwf2.yml", _id="subwf2")\
 # that in some way we need *both* this map file, and the one saying to stage
 # intermediate files back to the main workflow, and it seems that currently we
 # can only use one of the two.
-j1.add_args('-Dpegasus.dir.storage.mapper.replica.file=output_sw1.map')
 
 root_wf.add_jobs(j1, j2)
 
