@@ -97,6 +97,7 @@ tc.write()
 # remains ignorant that it exists.
 
 with open("output_sw1.map", "w") as f:
+    f.write("""k1.txt {}/newoutput/k1.txt pool="local"\n""".format(os.getcwd()))
     f.write("""k3.txt {}/newoutput/k3.txt pool="local"\n""".format(os.getcwd()))
 
 # I put this in the ReplicaCatalog here, but in general it would be produced by
@@ -112,7 +113,7 @@ wf1 = Workflow("subworkflow-1")
 k1 = Job(keg)\
         .add_args("-i", input_file, "-o", k1_out, "-T", 5)\
         .add_inputs(input_file)\
-        .add_outputs(k1_out)
+        .add_outputs(k1_out, stage_out=True)
 
 ls1 = Job(ls)\
         .add_args("-alh")
@@ -150,11 +151,11 @@ j1.add_args('-Dpegasus.dir.storage.mapper.replica.file=output_sw1.map')
 
 j1.add_planner_args(verbose=3, output_sites=['local'])\
         .add_inputs(input_file, output_map_sw1)\
-        .add_outputs(k1_out)
+        .add_outputs(k1_out, stage_out=True)
 
 
-j2 = SubWorkflow("subwf2.yml", _id="subwf2")\
-        .add_planner_args(verbose=3)\
+j2 = SubWorkflow("subwf2.yml", _id="subwf2")
+j2.add_planner_args(verbose=3)\
         .add_inputs(k1_out)\
         .add_outputs(k2_out)
 
